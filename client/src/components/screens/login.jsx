@@ -47,23 +47,30 @@ export const  Login=()=> {
     };
 
     try {
+      setLoading(true);
         const result = await axios.post("http://127.0.0.1:8000/api/v1/login",{email,password},config);
         
         if(result.data.code === "success"){
-          setLoading(false);
-            localStorage.setItem("authToken",result.data.token);
-            localStorage.setItem("userId",result.data.user._id);
-           if(result.data.user.role === "Admin"){
-            localStorage.setItem("admin",result.data.user.role);
-           }
+          
+
             setuserData({
               id:result.data.user._id,
               email:result.data.user.email,
               role:result.data.user.role,
               username:result.data.user.username,
             });
-            
-            navigate("/profile",{state:{user:result.data.user}});
+            setTimeout(()=>{
+              setLoading(false);
+            },20000);
+            if(!isLoading){
+              localStorage.setItem("authToken",result.data.token);
+              localStorage.setItem("userId",result.data.user._id);
+             if(result.data.user.role === "Admin"){
+              localStorage.setItem("admin",result.data.user.role);
+             }
+              navigate("/profile",{state:{user:result.data.user}});
+            }
+           
         }else if(result.data.code === "ErrorResponse"){
           setLoading(false);
           console.log("i'm inside this tab")
@@ -100,7 +107,7 @@ export const  Login=()=> {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-        {isLoading?<CircularProgress/>:  <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        {isLoading?<CircularProgress size={"50"}/>:  <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required

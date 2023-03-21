@@ -40,9 +40,7 @@ const taskUpload = async(request,response,next)=>{
 
 }
 
-async function verifyUser(request,response,next){
-    
-}
+
 
 async function getAllTasks(request,response,next){
     const id = request.headers.id;

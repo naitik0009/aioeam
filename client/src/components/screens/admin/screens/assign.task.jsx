@@ -1,7 +1,7 @@
 import { AdminNavbar } from "../extensions/navbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
-import { CircularProgress } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 export const AssignTask = () => {
   const props = useLocation();
@@ -27,9 +27,11 @@ export const AssignTask = () => {
         localStorage.removeItem("userId");
         setTimeout(()=>{
           setLoading(false);
-        },9000);
+        },5000);
         
-        navigate("/admin-panel");
+        if(!loading){
+          navigate("/admin-panel");
+        }
       }
     }).catch((error)=>{
       setLoading(false)
@@ -42,7 +44,7 @@ export const AssignTask = () => {
     <>
       <AdminNavbar />
       <div className="container">
-{loading?<CircularProgress/>:<>
+{loading?<CircularProgress size={30}/>:<>
   <form onSubmit={handleSubmit}>
           <div class="mb-3">
             <label htmlFor="exampleInputEmail1" class="form-label">Task Name</label>

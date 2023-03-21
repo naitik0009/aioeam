@@ -124,10 +124,10 @@ getTask();
         </thead>
         <tbody>
          
-            {Array.isArray(task)? task.map((value)=>{
+            {Array.isArray(task)? task.map((value,index)=>{
               return (
                 <tr>
-                 <th scope="row">1</th>
+                 <th scope="row">{index+1}</th>
             <td>{value.name}</td>
             <td>{value.description}</td>
             <td>{value.deadline}</td>
@@ -141,23 +141,8 @@ getTask();
             </td>
             </tr>
               );
-            }):<tr>
-              <th scope="row">1</th>
-            <td>{task.name}</td>
-            <td>{task.description}</td>
-            <td>{task.deadline}</td>
-            <td>{task.status?"complete":"incomplete"}</td>
-            <td>
-
-              <input type="file" accept="pdf" onChange={(event) => { setFile([...file, event.target.files[0]]) }} id="myFile" name="task" />
-              <button onClick={(event => { handleSubmit(event) })} type="submit">upload</button>
-
-
-            </td>
-            </tr>}
-           
-         
-
+            }):<>
+            <h1>No task for you right now</h1></>}
         </tbody>
       </table>
     </div>
