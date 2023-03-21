@@ -16,6 +16,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import { userContext } from '../context/userData.context';
+import  secureLocalStorage from  "react-secure-storage";
+
+
 const theme = createTheme();
 
 export const  Login=()=> {
@@ -29,9 +32,9 @@ export const  Login=()=> {
 
     React.useEffect(()=>{
 
-      if(localStorage.getItem("authToken") && localStorage.getItem("admin")==="Admin"){
+      if(secureLocalStorage.getItem("authToken") && secureLocalStorage.getItem("admin")==="Admin"){
         navigate("/admin-panel")
-      }else if(localStorage.getItem("authToken") && !localStorage.getItem("admin")){
+      }else if(secureLocalStorage.getItem("authToken") && !secureLocalStorage.getItem("admin")){
         navigate("/profile")
       }else{
         navigate("/login")
@@ -51,8 +54,6 @@ export const  Login=()=> {
         const result = await axios.post("http://127.0.0.1:8000/api/v1/login",{email,password},config);
         
         if(result.data.code === "success"){
-          
-
             setuserData({
               id:result.data.user._id,
               email:result.data.user.email,
@@ -63,10 +64,10 @@ export const  Login=()=> {
               setLoading(false);
             },20000);
             if(!isLoading){
-              localStorage.setItem("authToken",result.data.token);
-              localStorage.setItem("userId",result.data.user._id);
+              secureLocalStorage.setItem("authToken",result.data.token);
+              secureLocalStorage.setItem("userId",result.data.user._id);
              if(result.data.user.role === "Admin"){
-              localStorage.setItem("admin",result.data.user.role);
+              secureLocalStorage.setItem("admin",result.data.user.role);
              }
               navigate("/profile",{state:{user:result.data.user}});
             }

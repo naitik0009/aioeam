@@ -3,12 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
+import secureLocalStorage from "react-secure-storage";
 export const AssignTask = () => {
   const props = useLocation();
   const navigate = useNavigate();
 
   useLayoutEffect(() => {
-    localStorage.setItem("userId", props.state.id);
+    secureLocalStorage.setItem("userId", props.state.id);
   }, [])
 
   const config = {
@@ -22,16 +23,16 @@ export const AssignTask = () => {
   const handleSubmit =async (event) => {
     setLoading(true);
     event.preventDefault();
-    const res =await axios.post("http://localhost:8000/api/v1/admin/assignTask", { userId: localStorage.getItem("userId"), name: task, description, deadline },config).then((result) => {
+
+    const res =await axios.post("http://localhost:8000/api/v1/admin/assignTask", { userId: secureLocalStorage.getItem("userId"), name: task, description, deadline },config).then((result) => {
       if(result.data.code==="success"){
-        localStorage.removeItem("userId");
+        secureLocalStorage.removeItem("userId");
         setTimeout(()=>{
           setLoading(false);
+          navigate("/admin-panel");
         },5000);
         
-        if(!loading){
-          navigate("/admin-panel");
-        }
+ 
       }
     }).catch((error)=>{
       setLoading(false)

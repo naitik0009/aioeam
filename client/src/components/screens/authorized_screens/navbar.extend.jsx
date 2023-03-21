@@ -6,11 +6,12 @@ import Button from '@mui/material/Button';
 import { Avatar } from "@mui/material";
 import logo from "../../../assets/logo.jpg"
 import { useNavigate } from "react-router-dom";
+import secureLocalStorage from 'react-secure-storage';
 export const Navbar = ()=>{
     const navigate = useNavigate();
+
     const logoutHandler = () => {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("userId");
+        secureLocalStorage.clear();
         navigate("/login");
     }
     return (<>

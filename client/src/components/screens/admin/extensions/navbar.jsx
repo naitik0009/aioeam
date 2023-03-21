@@ -1,9 +1,9 @@
 import { Link,useNavigate } from "react-router-dom";
+import secureLocalStorage from "react-secure-storage";
 export const AdminNavbar = ()=>{
     const navigate = useNavigate();
     const logoutHandler = () => {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("admin");
+        secureLocalStorage.clear();
         navigate("/login");
     }
     return (
