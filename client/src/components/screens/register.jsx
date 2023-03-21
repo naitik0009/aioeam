@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-
+import secureLocalStorage from "react-secure-storage";
 
 
 
@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 useEffect(()=>{
-    !localStorage.getItem("authToken")?navigate("/register"):navigate("/profile");
+    !secureLocalStorage.getItem("authToken")?navigate("/register"):navigate("/profile");
 },[navigate]);
 
     const handleSubmit = async (event) => {

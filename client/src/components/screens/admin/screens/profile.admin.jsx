@@ -2,12 +2,13 @@ import { AdminNavbar } from "../extensions/navbar";
 import { useContext,useEffect } from "react";
 import { userContext } from "../../../context/userData.context";
 import { useNavigate } from "react-router-dom";
+import secureLocalStorage from "react-secure-storage";
 export const AdminProfile = () => {
     const {userData} = useContext(userContext);
     const navigate = useNavigate();
     useEffect(() => {
 
-        if (!localStorage.getItem("authToken") && !localStorage.getItem("admin")) {
+        if (!secureLocalStorage.getItem("authToken") && !secureLocalStorage.getItem("admin")) {
             navigate("/login");
         };
 });

@@ -2,6 +2,7 @@ import { useState,useContext ,useEffect } from "react";
 import { Navbar } from "./navbar.extend";
 import { useNavigate,useLocation } from "react-router-dom";
 import axios from "axios";
+import secureLocalStorage from "react-secure-storage";
 
 
 export const DashBoard = () => {
@@ -19,14 +20,14 @@ export const DashBoard = () => {
     email: "",
   });
   const config = {
-    headers: { "Content-Type": "application/json","id":localStorage.getItem("userId") },
+    headers: { "Content-Type": "application/json","id":secureLocalStorage.getItem("userId") },
   };
 const [task,setTasks] = useState([]);
 
 
   useEffect(() => {
 //checking if user is logged in or not
-    if (!localStorage.getItem("authToken")) {
+    if (!secureLocalStorage.getItem("authToken")) {
       navigate("/login");
     };
 
@@ -38,7 +39,7 @@ const [task,setTasks] = useState([]);
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
-          authorization: `bearer ${localStorage.getItem("authToken")}`,
+          authorization: `bearer ${secureLocalStorage.getItem("authToken")}`,
         }
       });
 
@@ -46,7 +47,7 @@ const [task,setTasks] = useState([]);
         console.log(res.data.message);
         if (res.code !== "success") {
           console.log("nahi huwa login vai")
-          localStorage.removeItem("authToken");
+          secureLocalStorage.removeItem("authToken");
         } else if (res.code === "ErrorResponse") {
           alert(res.mesage, "cannot login");
         }
@@ -56,7 +57,7 @@ const [task,setTasks] = useState([]);
           email: res.data.email,
         });
       }).catch((error) => {
-        localStorage.removeItem("authToken");
+        secureLocalStorage.removeItem("authToken");
         setError(error);
       })
     };
@@ -65,7 +66,7 @@ const [task,setTasks] = useState([]);
     //let's retrieve users tasks
 
     async function getTask(){
-      console.log(localStorage.getItem("userId"))
+      console.log(secureLocalStorage.getItem("userId"))
       const tasks = await axios.get("http://127.0.0.1:8000/api/v1/getAllTasks",config);
       if(tasks.data.code==="success"){
         setTasks(tasks.data.task);
@@ -109,9 +110,12 @@ getTask();
 
   return (<div>
     <Navbar />
-    <h1 align="center">Welcome to the dashboard</h1>
     <div className="container">
-      <table className="table">
+    <h1 align="center">Welcome to the dashboard</h1>
+    </div>
+    <div className="container">
+{task.length === 0?<h1>Right now there is no task for you come back later!!!!</h1>:<>
+  <table className="table">
         <thead>
           <tr>
             <th scope="col">S.No</th>
@@ -124,7 +128,7 @@ getTask();
         </thead>
         <tbody>
          
-            {Array.isArray(task)? task.map((value,index)=>{
+            {Array.isArray(task) && task.length !=0 ?task.map((value,index)=>{
               return (
                 <tr>
                  <th scope="row">{index+1}</th>
@@ -141,10 +145,10 @@ getTask();
             </td>
             </tr>
               );
-            }):<>
-            <h1>No task for you right now</h1></>}
+            }):""}
         </tbody>
       </table>
+</>}
     </div>
   </div>);
 }

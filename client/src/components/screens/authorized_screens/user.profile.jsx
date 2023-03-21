@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Navbar } from "./navbar.extend";
 import { useNavigate } from "react-router-dom";
 import * as React from 'react';
+import secureLocalStorage from "react-secure-storage";
 
 export const Profile = () => {
     const [error, setError] = useState([]);
@@ -15,7 +16,7 @@ export const Profile = () => {
 
     useEffect(() => {
 
-        if (!localStorage.getItem("authToken")) {
+        if (!secureLocalStorage.getItem("authToken")) {
             navigate("/login");
         };
         async function getData() {
@@ -23,14 +24,14 @@ export const Profile = () => {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
-                    authorization: `bearer ${localStorage.getItem("authToken")}`,
+                    authorization: `bearer ${secureLocalStorage.getItem("authToken")}`,
                 }
             });
             const result = await response.json().then((res) => {
                 console.log(res.data.message);
                 if (res.code !== "success") {
                     console.log("nahi huwa login vai")
-                    localStorage.removeItem("authToken");
+                    secureLocalStorage.removeItem("authToken");
                 } else if (res.code === "ErrorResponse") {
                     alert(res.mesage, "cannot login");
                 }
@@ -41,7 +42,7 @@ export const Profile = () => {
                     role:res.data.role,
                 });
             }).catch((error) => {
-                localStorage.removeItem("authToken");
+                secureLocalStorage.removeItem("authToken");
                 setError(error);
             })
         };
